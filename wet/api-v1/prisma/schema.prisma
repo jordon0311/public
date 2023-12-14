@@ -10,10 +10,6 @@ datasource db {
   url      = env("DB_URL")
 }
 
-enum AuthProvider {
-  Firebase
-}
-
 enum Opinion {
   Dislike
   Like
@@ -21,31 +17,45 @@ enum Opinion {
 }
 
 model Chapter {
+  // metadata
   id           String        @id @default(nanoid())
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+  // fields
   title        String
   content      String
+  // relations
   ChapterStory ChapterStory?
 
   @@map("chapter")
 }
 
 model ChapterStory {
+  // metadata
   id           String @id @default(nanoid())
   chapterId    String @unique
-  chapterIndex Int
   storyId      String
+  // fields
+  chapterIndex Int
 
+  // relations
+  // If a chapter is deleted, the join is deleted as well
   chapter Chapter @relation(onDelete: Cascade, fields: [chapterId], references: [id])
-  story   Story   @relation(onDelete: Cascade, fields: [storyId], references: [id])
+  // A story cannot be deleted if it has chapters
+  story   Story   @relation(onDelete: Restrict, fields: [storyId], references: [id])
 
   @@unique([chapterIndex, storyId])
   @@map("chapter_story")
 }
 
 model Story {
-  id    String @id @default(nanoid())
-  title String
-
+  // metadata
+  id            String          @id @default(nanoid())
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @default(now()) @updatedAt
+  // fields
+  title         String
+  // relations
   StoryUser     StoryUser?
   ChapterStory  ChapterStory[]
   StoryReaction StoryReaction[]
@@ -54,55 +64,47 @@ model Story {
 }
 
 model StoryReaction {
-  id      String @id @default(nanoid())
-  storyId String
-  userId  String
-
-  opinion Opinion
-
-  story Story @relation(onDelete: Cascade, fields: [storyId], references: [id])
-  user  User  @relation(onDelete: Cascade, fields: [userId], references: [id])
+  // metadata
+  id        String   @id @default(nanoid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  storyId   String
+  userId    String
+  // fields
+  opinion   Opinion
+  // relations
+  story     Story    @relation(onDelete: Cascade, fields: [storyId], references: [id])
+  user      User     @relation(onDelete: Cascade, fields: [userId], references: [id])
 
   @@unique([storyId, userId])
   @@map("story_reaction")
 }
 
 model StoryUser {
+  // metadata
   id      String @id @default(nanoid())
   storyId String @unique
   userId  String
-
-  story Story @relation(onDelete: Cascade, fields: [storyId], references: [id])
-  user  User  @relation(onDelete: Cascade, fields: [userId], references: [id])
+  // relations
+  story   Story  @relation(onDelete: Cascade, fields: [storyId], references: [id])
+  user    User   @relation(onDelete: Cascade, fields: [userId], references: [id])
 
   @@map("story_user")
 }
 
 model User {
-  id       String @id @default(nanoid())
-  username String @unique
-  email    String @unique
-
+  // metadata
+  id                String          @id @default(nanoid())
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @default(now()) @updatedAt
+  // fields
+  username          String          @unique
+  email             String          @unique
+  firebaseId        String          @unique
   profilePictureUrl String?
-
-  createdAt          DateTime             @default(now())
-  updatedAt          DateTime             @updatedAt
-  StoryUser          StoryUser[]
-  StoryReaction      StoryReaction[]
-  UserAuthentication UserAuthentication[]
+  // relations
+  StoryUser         StoryUser[]
+  StoryReaction     StoryReaction[]
 
   @@map("user")
-}
-
-model UserAuthentication {
-  id         String       @id @default(nanoid())
-  externalId String
-  provider   AuthProvider
-  userId     String
-
-  user User @relation(onDelete: Cascade, fields: [userId], references: [id])
-
-  @@unique([externalId, provider])
-  @@unique([userId, provider])
-  @@map("user_authentication")
 }

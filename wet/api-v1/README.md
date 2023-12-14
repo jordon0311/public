@@ -41,3 +41,6 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
+## API Documentation
+When running locally, the api is found at http://localhost:3001/api

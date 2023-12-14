@@ -9,16 +9,19 @@ import type { User } from "src/services/domain/user/models/user";
 
 @Injectable()
 export class UserService implements UserApi {
+  /** Create a user */
   CreateUser: (params: params.CreateUser) => Promise<User> = async (params) => {
     const dbUser = await mutations.createUser(params);
     const user = transform.user(dbUser);
     return user;
   };
+  /** Delete a user */
   DeleteUser: (params: params.DeleteUser) => Promise<User> = async (params) => {
     const dbUser = await mutations.deleteUser(params);
     const user = transform.user(dbUser);
     return user;
   };
+  /** Get a user */
   GetUser: (params: params.GetUser) => Promise<User> = async (params) => {
     const dbUser = await (async () => {
       switch (params.discriminator) {
@@ -36,6 +39,7 @@ export class UserService implements UserApi {
     const user = transform.user(dbUser);
     return user;
   };
+  /** Search users */
   SearchUsers: (params: params.SearchUsers) => Promise<User[]> = async (
     params,
   ) => {
@@ -43,9 +47,10 @@ export class UserService implements UserApi {
     const users = dbUsers.map(transform.user);
     return users;
   };
+  /** Update a user */
   UpdateUser: (params: params.UpdateUser) => Promise<User> = async (params) => {
-    const updatedUser = await mutations.updateUser(params);
-
-    return updatedUser;
+    const dbUser = await mutations.updateUser(params);
+    const user = transform.user(dbUser);
+    return user;
   };
 }

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { AuthProvider } from "@prisma/client";
 import type { params } from "domain/user/api.params";
 import { type DBUser, typesafeUser } from "domain/user/data/user";
 
@@ -9,13 +8,8 @@ export const mutations = {
   createUser: async (params: params.CreateUser): Promise<DBUser> => {
     const user = await wetDBClient.user.create({
       data: {
-        UserAuthentication: {
-          create: {
-            externalId: params.firebaseId,
-            provider: AuthProvider.Firebase,
-          },
-        },
         email: params.email,
+        firebaseId: params.firebaseId,
         profilePictureUrl: params.profilePictureUrl,
         username: params.username,
       },
@@ -47,19 +41,6 @@ export const mutations = {
         email: params.email,
         profilePictureUrl: params.profilePictureUrl,
         username: params.username,
-        ...params.firebaseId && {
-          UserAuthentication: {
-            update: {
-              data: { externalId: params.firebaseId },
-              where: {
-                userId_provider: {
-                  provider: AuthProvider.Firebase,
-                  userId: params.id,
-                },
-              },
-            },
-          },
-        },
       },
       where: { id: params.id },
       ...typesafeUser,

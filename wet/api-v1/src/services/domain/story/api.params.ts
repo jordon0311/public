@@ -14,6 +14,7 @@ export namespace params {
 
   export type ReactToStory = {
     opinion: Opinion;
+    storyId: string;
     userId: string;
   };
 
@@ -23,6 +24,7 @@ export namespace params {
   };
 
   export type UpdateStory = {
+    id: string;
     title?: string;
   };
 }

@@ -16,10 +16,10 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "paths": {
-      "#*": ["./src/*"],
       "domain/*": ["./src/services/domain/*"],
       "orchestration/*": ["./src/services/orchestration/*"],
-      "prisma/*": ["./prisma/*"]
+      "prisma/*": ["./prisma/*"],
+      "#*": ["./src/*"]
     },
     "plugins": [
       {

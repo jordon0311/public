@@ -15,7 +15,6 @@ export namespace params {
 
   export type UpdateUser = {
     email?: string;
-    firebaseId?: string;
     id: string;
     profilePictureUrl?: string;
     username?: string;

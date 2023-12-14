@@ -32,10 +32,12 @@
     "files.eol": "\n"
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll": true,
-    "source.organizeImports": false
+    "source.fixAll": "explicit",
+    "source.organizeImports": "never"
   },
   "editor.formatOnSave": false,
+  "files.eol": "\n",
   "javascript.preferences.importModuleSpecifier": "non-relative",
+  "prettier.endOfLine": "lf",
   "typescript.preferences.importModuleSpecifier": "non-relative"
 }

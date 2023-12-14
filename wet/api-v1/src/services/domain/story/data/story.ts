@@ -1,3 +1,4 @@
+import type { StoryReaction } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 
 export const typesafeStory = Prisma.validator<Prisma.StoryDefaultArgs>()({
@@ -9,3 +10,5 @@ export const typesafeStory = Prisma.validator<Prisma.StoryDefaultArgs>()({
 });
 
 export type DBStory = Prisma.StoryGetPayload<typeof typesafeStory>;
+
+export type DBStoryReaction = StoryReaction
